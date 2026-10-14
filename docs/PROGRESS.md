@@ -46,6 +46,8 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 
 - **Playwright (E2E Testing)**: Ditunda hingga **Sprint 2**, disiapkan bertepatan dengan pengujian integrasi PWA dan sinkronisasi absensi offline-ke-online.
 - **Sentry & Observabilitas**: Ditunda hingga **Tugas 0.6**, disiapkan setelah fondasi Next.js (0.2) stabil.
+- **Dukungan Node 24**: Versi Node lokal dikunci pada 24 (`.nvmrc`) dan engine di `package.json` mendukung `>=20.9.0`. Dukungan Node 24 di Vercel diverifikasi di tugas 0.4.
+- **Kompatibilitas Serwist**: Serwist mungkin butuh build berbasis webpack. Verifikasi kompatibilitas dengan versi Next yang terpasang di Sprint 2 (ADR-001).
 
 ---
 
@@ -69,9 +71,9 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
   - [x] Pelacak progres (`docs/PROGRESS.md`)
   - [ ] *[Manual User]* Buat repo GitHub & pasang proteksi branch `main` (wajib review & CI hijau)
 - [ ] **0.2 Scaffolding Codebase Next.js**
-  - [ ] Scaffold Next.js App Router (TS strict, Tailwind CSS, shadcn/ui)
-  - [ ] Menetapkan versi Node via `.nvmrc` atau `engines` (disamakan dengan CI)
-  - [ ] ESLint, Prettier, skrip `lint`, `typecheck`, `test`
+  - [x] Scaffold Next.js App Router (TS strict, Tailwind CSS, shadcn/ui)
+  - [x] Menetapkan versi Node via `.nvmrc` atau `engines` (disamakan dengan CI)
+  - [x] ESLint, Prettier, skrip `lint`, `typecheck`, `test`
 - [ ] **0.3 Provisioning Lingkungan Supabase**
   - [ ] Konfigurasi `supabase init` lokal
   - [ ] *[Manual User]* Buat project cloud Staging & Produksi (Singapore)
