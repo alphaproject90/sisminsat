@@ -43,12 +43,14 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 
 ---
 
-## Catatan Jadwal (Penundaan Terencana)
+## Catatan Jadwal & Catatan Teknis
 
 - **Playwright (E2E Testing)**: Ditunda hingga **Sprint 2**, disiapkan bertepatan dengan pengujian integrasi PWA dan sinkronisasi absensi offline-ke-online.
 - **Sentry & Observabilitas**: Ditunda hingga **Tugas 0.6**, disiapkan setelah fondasi Next.js (0.2) stabil.
 - **Dukungan Node 24**: Versi Node lokal dikunci pada 24 (`.nvmrc`) dan engine di `package.json` mendukung `>=20.9.0`. Dukungan Node 24 di Vercel diverifikasi di tugas 0.4.
-- **Kompatibilitas Next.js 16.4 (Proxy & Serwist)**: Verifikasi middleware vs proxy dan kompatibilitas Serwist di Next 16.4 sebelum Sprint 1-2. Serwist mungkin butuh build berbasis webpack (ADR-001).
+- **Next 16 (Proxy & Cookies Async)**: Middleware konvensi diganti menjadi proxy (`proxy.ts`), dan `cookies()` bersifat async (`await cookies()`). Verifikasi dari dokumentasi lokal sebelum Sprint 1.
+- **Tailwind Turbopack vs Webpack (Serwist)**: `next.config.ts` memakai aturan loader `@tailwindcss/turbopack` yang hanya berlaku di Turbopack. Jika Serwist butuh build webpack di Sprint 2, integrasi Tailwind harus diganti ke jalur PostCSS resmi.
+- **Dependensi shadcn & Risiko Audit**: `shadcn` ada di `dependencies` dan dibutuhkan build lewat `@import 'shadcn/tailwind.css'` di `globals.css`. Audit menemukan temuan high di rantai `braces`. Keputusan: diterima sebagai risiko untuk sementara, ditinjau ulang di 0.5 dengan `npm audit --omit=dev` di CI. Dilarang memindahkan `shadcn` ke `devDependencies` tanpa build ulang.
 
 ---
 
@@ -56,7 +58,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 
 | Nomor | Judul Keputusan | Status | Target / Catatan |
 |---|---|---|---|
-| ADR-001 | Pemilihan Stack: Next.js App Router + Supabase + Serwist | **Diterima** | Fondasi Next.js 16.4, TypeScript strict, Tailwind v4, shadcn lolos uji pada 0.2 |
+| ADR-001 | Pemilihan Stack: Next.js App Router + Supabase + Serwist | **Diusulkan** | Fondasi Next/TS/Tailwind lolos uji 0.2; Serwist dan Supabase belum diverifikasi. Penerimaan keputusan ada di Product Owner. |
 | ADR-002 | Absensi Offline: Client Component + IndexedDB, Sinkronisasi via Supabase Browser Client | **Diusulkan** | Target finalisasi Sprint 2 |
 
 ---
