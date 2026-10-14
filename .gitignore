@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing & Artifacts
+coverage/
+playwright-report/
+test-results/
+
+# Build & Cache
+.next/
+out/
+build/
+dist/
+.vercel/
+*.tsbuildinfo
+
+# Service Worker Generated Files
+public/sw.js*
+public/swe-worker*
+
+# Environment Variables (Ketat: abaikan semua .env kecuali .env.example)
+.env*
+!.env.example
+
+# Debug & OS
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
