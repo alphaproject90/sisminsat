@@ -31,6 +31,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 |---|---|---|---|---|
 | **OPEN-01** | Kebijakan RLS Anggota vs Hak Akses Kwartir | Matriks RLS saat ini membuat pengurus kwartir bisa membaca baris anggota di gudep turunan, padahal dokumen (E7) menyebut kwartir hanya melihat data agregat. | Dilarang menulis migrasi RLS untuk tabel `members` sebelum keputusan final ditetapkan. | **Terbuka** |
 | **OPEN-02** | Handle Akun GitHub di CODEOWNERS | Menentukan username/organisasi GitHub resmi untuk peninjau kode default. | Telah disepakati menggunakan `@alphaproject90`. | **Selesai** |
+| **OPEN-03** | Pilihan Library Komponen shadcn: Base UI vs Radix UI | Preset `base-nova` dari shadcn menginstal `@base-ui/react` sebagai library komponen primitif. Semua tes, typecheck, dan build lolos. | Perlu diputuskan sebelum Sprint 1 apakah mempertahankan Base UI atau beralih ke Radix UI jika dibutuhkan komponen tertentu. | **Terbuka** |
 
 ---
 
@@ -55,7 +56,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 
 | Nomor | Judul Keputusan | Status | Target / Catatan |
 |---|---|---|---|
-| ADR-001 | Pemilihan Stack: Next.js App Router + Supabase + Serwist | **Diusulkan** | Menunggu hasil uji scaffold 0.2 |
+| ADR-001 | Pemilihan Stack: Next.js App Router + Supabase + Serwist | **Diterima** | Fondasi Next.js 16.4, TypeScript strict, Tailwind v4, shadcn lolos uji pada 0.2 |
 | ADR-002 | Absensi Offline: Client Component + IndexedDB, Sinkronisasi via Supabase Browser Client | **Diusulkan** | Target finalisasi Sprint 2 |
 
 ---
@@ -70,7 +71,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
   - [x] Reviewer default (`.github/CODEOWNERS`)
   - [x] Pelacak progres (`docs/PROGRESS.md`)
   - [ ] *[Manual User]* Buat repo GitHub & pasang proteksi branch `main` (wajib review & CI hijau)
-- [ ] **0.2 Scaffolding Codebase Next.js**
+- [x] **0.2 Scaffolding Codebase Next.js**
   - [x] Scaffold Next.js App Router (TS strict, Tailwind CSS, shadcn/ui)
   - [x] Menetapkan versi Node via `.nvmrc` atau `engines` (disamakan dengan CI)
   - [x] ESLint, Prettier, skrip `lint`, `typecheck`, `test`
