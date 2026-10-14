@@ -32,6 +32,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 | **OPEN-01** | Kebijakan RLS Anggota vs Hak Akses Kwartir | Matriks RLS saat ini membuat pengurus kwartir bisa membaca baris anggota di gudep turunan, padahal dokumen (E7) menyebut kwartir hanya melihat data agregat. | Dilarang menulis migrasi RLS untuk tabel `members` sebelum keputusan final ditetapkan. | **Terbuka** |
 | **OPEN-02** | Handle Akun GitHub di CODEOWNERS | Menentukan username/organisasi GitHub resmi untuk peninjau kode default. | Telah disepakati menggunakan `@alphaproject90`. | **Selesai** |
 | **OPEN-03** | Pilihan Library Komponen shadcn: Base UI vs Radix UI | Preset `base-nova` dari shadcn menginstal `@base-ui/react` sebagai library komponen primitif. Semua tes, typecheck, dan build lolos. | Perlu diputuskan sebelum Sprint 1 apakah mempertahankan Base UI atau beralih ke Radix UI jika dibutuhkan komponen tertentu. | **Terbuka** |
+| **OPEN-04** | Konfigurasi DB Major Version & Auth Supabase | Nilai `major_version` di bagian `[db]` pada `supabase/config.toml` (saat ini 17) harus disamakan dengan project cloud setelah project staging dibuat. Pengaturan auth (`site_url`, konfirmasi email) diputuskan di Sprint 1. | Sinkronisasi versi DB lokal dan cloud sebelum pengujian migrasi; keputusan auth di Sprint 1. | **Terbuka** |
 
 ---
 
@@ -45,6 +46,8 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 
 ## Catatan Jadwal & Catatan Teknis
 
+- **Ketergantungan Branch PR 0.2 & 0.3**: Branch `feat/0-3-supabase-skeleton` dibuat dari HEAD branch `feat/0-2-nextjs-scaffold`. PR untuk tugas 0.2 harus di-merge ke `main` lebih dulu sebelum PR tugas 0.3 di-merge.
+- **Versi Supabase CLI**: Supabase CLI terpasang 2.117.0, versi di CI di-pin di 0.5.
 - **Playwright (E2E Testing)**: Ditunda hingga **Sprint 2**, disiapkan bertepatan dengan pengujian integrasi PWA dan sinkronisasi absensi offline-ke-online.
 - **Sentry & Observabilitas**: Ditunda hingga **Tugas 0.6**, disiapkan setelah fondasi Next.js (0.2) stabil.
 - **Dukungan Node 24**: Versi Node lokal dikunci pada 24 (`.nvmrc`) dan engine di `package.json` mendukung `>=20.9.0`. Dukungan Node 24 di Vercel diverifikasi di tugas 0.4.
@@ -78,7 +81,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
   - [x] Menetapkan versi Node via `.nvmrc` atau `engines` (disamakan dengan CI)
   - [x] ESLint, Prettier, skrip `lint`, `typecheck`, `test`
 - [ ] **0.3 Provisioning Lingkungan Supabase**
-  - [ ] Konfigurasi `supabase init` lokal
+  - [x] Konfigurasi `supabase init` lokal
   - [ ] *[Manual User]* Buat project cloud Staging & Produksi (Singapore)
   - [ ] *[Manual User]* Konfigurasi GitHub Environment Secrets
 - [ ] **0.4 Integrasi Vercel**
