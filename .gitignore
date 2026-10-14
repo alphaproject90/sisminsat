@@ -30,9 +30,6 @@ public/swe-worker*
 .env*
 !.env.example
 
-# Temporary Scaffold Folder
-scaffold-tmp/
-
 # Debug & OS
 npm-debug.log*
 yarn-debug.log*

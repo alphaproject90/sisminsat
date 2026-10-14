@@ -47,7 +47,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 - **Playwright (E2E Testing)**: Ditunda hingga **Sprint 2**, disiapkan bertepatan dengan pengujian integrasi PWA dan sinkronisasi absensi offline-ke-online.
 - **Sentry & Observabilitas**: Ditunda hingga **Tugas 0.6**, disiapkan setelah fondasi Next.js (0.2) stabil.
 - **Dukungan Node 24**: Versi Node lokal dikunci pada 24 (`.nvmrc`) dan engine di `package.json` mendukung `>=20.9.0`. Dukungan Node 24 di Vercel diverifikasi di tugas 0.4.
-- **Kompatibilitas Serwist**: Serwist mungkin butuh build berbasis webpack. Verifikasi kompatibilitas dengan versi Next yang terpasang di Sprint 2 (ADR-001).
+- **Kompatibilitas Next.js 16.4 (Proxy & Serwist)**: Verifikasi middleware vs proxy dan kompatibilitas Serwist di Next 16.4 sebelum Sprint 1-2. Serwist mungkin butuh build berbasis webpack (ADR-001).
 
 ---
 
