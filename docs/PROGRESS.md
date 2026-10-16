@@ -20,7 +20,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 2. **Infrastruktur Supabase**: 1 lokal (Docker CLI) + 2 cloud (staging dan produksi). Deployment Preview Vercel memakai project staging.
 3. **Arsitektur RLS**: Pola standar `org_id in (select private.accessible_org_ids())` tanpa caching manual. Performa dijaga via indeks dan diukur dengan `EXPLAIN ANALYZE`. Pencabutan keanggotaan langsung memutus akses data seketika.
 4. **Data NIK**: NIK anak tidak dikumpulkan di tahap MVP. Kolom `nik_enc` tidak dibuat sekarang.
-5. **Alur Deployment & Secrets**: Deployment Vercel berjalan melalui integrasi Git langsung (tanpa `VERCEL_TOKEN` di GitHub Actions). Secret GitHub Actions hanya `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, dan `SUPABASE_PROJECT_REF`, dipisahkan per GitHub Environment (`staging` dan `production`).
+5. **Alur Deployment & Secrets**: Deployment Vercel berjalan melalui integrasi Git langsung (tanpa `VERCEL_TOKEN` di GitHub Actions). Secret GitHub Actions hanya `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, dan `SUPABASE_PROJECT_REF`, dipisahkan per GitHub Environment (`staging` dan `production`). Berlaku jika paket GitHub mendukung; lihat OPEN-05.
 6. **Branding Awal**: Logo berupa placeholder wordmark teks "Sisminsat" tanpa lambang resmi Pramuka (ditangani pada tugas 0.7).
 
 ---
@@ -32,6 +32,9 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 | **OPEN-01** | Kebijakan RLS Anggota vs Hak Akses Kwartir | Matriks RLS saat ini membuat pengurus kwartir bisa membaca baris anggota di gudep turunan, padahal dokumen (E7) menyebut kwartir hanya melihat data agregat. | Dilarang menulis migrasi RLS untuk tabel `members` sebelum keputusan final ditetapkan. | **Terbuka** |
 | **OPEN-02** | Handle Akun GitHub di CODEOWNERS | Menentukan username/organisasi GitHub resmi untuk peninjau kode default. | Telah disepakati menggunakan `@alphaproject90`. | **Selesai** |
 | **OPEN-03** | Pilihan Library Komponen shadcn: Base UI vs Radix UI | Preset `base-nova` dari shadcn menginstal `@base-ui/react` sebagai library komponen primitif. Semua tes, typecheck, dan build lolos. | Perlu diputuskan sebelum Sprint 1 apakah mempertahankan Base UI atau beralih ke Radix UI jika dibutuhkan komponen tertentu. | **Terbuka** |
+| **OPEN-04** | Konfigurasi DB Major Version & Auth Supabase | Nilai `major_version` di bagian `[db]` pada `supabase/config.toml` (saat ini 17) harus disamakan dengan project cloud setelah project staging dibuat. Pengaturan auth (`site_url`, konfirmasi email) diputuskan di Sprint 1. | Sinkronisasi versi DB lokal dan cloud sebelum pengujian migrasi; keputusan auth di Sprint 1. | **Terbuka** |
+| **OPEN-05** | Batasan Paket GitHub Gratis pada Repo Privat | Paket GitHub gratis dengan repo privat. Menurut pemahaman Product Owner, proteksi branch dan Environments dengan reviewer tidak tersedia untuk kombinasi ini (diverifikasi di Settings). Opsi A: upgrade ke GitHub Pro. Opsi B: tetap gratis dengan kontrol kompensasi: tidak ada secret produksi di GitHub, migrasi produksi dijalankan manual dari komputer Product Owner, staging boleh memakai secret repo (data fiktif). Keputusan ada di Product Owner. | Menentukan strategi manajemen secret CI/CD dan alur rilis produksi di tugas 0.5. | **Terbuka** |
+| **OPEN-06** | Hardening Supabase untuk Sprint 1 | Hardening Supabase untuk Sprint 1, diturunkan dari supabase/config.toml: minimum_password_length dan password_requirements (Dokumen Kerja US-1.1: minimal 10 karakter), enable_confirmations email, ketersediaan MFA TOTP di paket Supabase (komentar config menyebut Pro), SMTP produksi (Resend) karena email bawaan terbatas, auto_expose_new_tables = false dengan GRANT eksplisit, dan status eksperimental pgdelta untuk db diff. | Wajib diharmonisasikan ke supabase/config.toml dan migrasi sebelum Sprint 1 dimulai. | **Terbuka** |
 
 ---
 
@@ -45,6 +48,8 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 
 ## Catatan Jadwal & Catatan Teknis
 
+- **Ketergantungan Branch PR 0.2 & 0.3**: Branch `feat/0-3-supabase-skeleton` dibuat dari HEAD branch `feat/0-2-nextjs-scaffold`. PR untuk tugas 0.2 harus di-merge ke `main` lebih dulu sebelum PR tugas 0.3 di-merge.
+- **Versi Supabase CLI**: Supabase CLI terpasang 2.117.0, versi di CI di-pin di 0.5.
 - **Playwright (E2E Testing)**: Ditunda hingga **Sprint 2**, disiapkan bertepatan dengan pengujian integrasi PWA dan sinkronisasi absensi offline-ke-online.
 - **Sentry & Observabilitas**: Ditunda hingga **Tugas 0.6**, disiapkan setelah fondasi Next.js (0.2) stabil.
 - **Dukungan Node 24**: Versi Node lokal dikunci pada 24 (`.nvmrc`) dan engine di `package.json` mendukung `>=20.9.0`. Dukungan Node 24 di Vercel diverifikasi di tugas 0.4.
@@ -72,13 +77,13 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
   - [x] GitHub PR Template (`.github/pull_request_template.md`)
   - [x] Reviewer default (`.github/CODEOWNERS`)
   - [x] Pelacak progres (`docs/PROGRESS.md`)
-  - [ ] *[Manual User]* Buat repo GitHub & pasang proteksi branch `main` (wajib review & CI hijau)
+  - [ ] *[Manual User]* Buat repo GitHub & pasang proteksi branch `main` (wajib review & CI hijau; berlaku jika paket GitHub mendukung; lihat OPEN-05)
 - [x] **0.2 Scaffolding Codebase Next.js**
   - [x] Scaffold Next.js App Router (TS strict, Tailwind CSS, shadcn/ui)
   - [x] Menetapkan versi Node via `.nvmrc` atau `engines` (disamakan dengan CI)
   - [x] ESLint, Prettier, skrip `lint`, `typecheck`, `test`
 - [ ] **0.3 Provisioning Lingkungan Supabase**
-  - [ ] Konfigurasi `supabase init` lokal
+  - [x] Konfigurasi `supabase init` lokal
   - [ ] *[Manual User]* Buat project cloud Staging & Produksi (Singapore)
   - [ ] *[Manual User]* Konfigurasi GitHub Environment Secrets
 - [ ] **0.4 Integrasi Vercel**
