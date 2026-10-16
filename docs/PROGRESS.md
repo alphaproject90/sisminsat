@@ -31,6 +31,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 |---|---|---|---|---|
 | **OPEN-01** | Kebijakan RLS Anggota vs Hak Akses Kwartir | Matriks RLS saat ini membuat pengurus kwartir bisa membaca baris anggota di gudep turunan, padahal dokumen (E7) menyebut kwartir hanya melihat data agregat. | Dilarang menulis migrasi RLS untuk tabel `members` sebelum keputusan final ditetapkan. | **Terbuka** |
 | **OPEN-02** | Handle Akun GitHub di CODEOWNERS | Menentukan username/organisasi GitHub resmi untuk peninjau kode default. | Telah disepakati menggunakan `@alphaproject90`. | **Selesai** |
+| **OPEN-03** | Pilihan Library Komponen shadcn: Base UI vs Radix UI | Preset `base-nova` dari shadcn menginstal `@base-ui/react` sebagai library komponen primitif. Semua tes, typecheck, dan build lolos. | Perlu diputuskan sebelum Sprint 1 apakah mempertahankan Base UI atau beralih ke Radix UI jika dibutuhkan komponen tertentu. | **Terbuka** |
 
 ---
 
@@ -42,10 +43,14 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 
 ---
 
-## Catatan Jadwal (Penundaan Terencana)
+## Catatan Jadwal & Catatan Teknis
 
 - **Playwright (E2E Testing)**: Ditunda hingga **Sprint 2**, disiapkan bertepatan dengan pengujian integrasi PWA dan sinkronisasi absensi offline-ke-online.
 - **Sentry & Observabilitas**: Ditunda hingga **Tugas 0.6**, disiapkan setelah fondasi Next.js (0.2) stabil.
+- **Dukungan Node 24**: Versi Node lokal dikunci pada 24 (`.nvmrc`) dan engine di `package.json` mendukung `>=20.9.0`. Dukungan Node 24 di Vercel diverifikasi di tugas 0.4.
+- **Next 16 (Proxy & Cookies Async)**: Middleware konvensi diganti menjadi proxy (`proxy.ts`), dan `cookies()` bersifat async (`await cookies()`). Verifikasi dari dokumentasi lokal sebelum Sprint 1.
+- **Tailwind Turbopack vs Webpack (Serwist)**: `next.config.ts` memakai aturan loader `@tailwindcss/turbopack` yang hanya berlaku di Turbopack. Jika Serwist butuh build webpack di Sprint 2, integrasi Tailwind harus diganti ke jalur PostCSS resmi.
+- **Dependensi shadcn & Risiko Audit**: `shadcn` ada di `dependencies` dan dibutuhkan build lewat `@import 'shadcn/tailwind.css'` di `globals.css`. Audit menemukan temuan high di rantai `braces`. Keputusan: diterima sebagai risiko untuk sementara, ditinjau ulang di 0.5 dengan `npm audit --omit=dev` di CI. Dilarang memindahkan `shadcn` ke `devDependencies` tanpa build ulang.
 
 ---
 
@@ -53,7 +58,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 
 | Nomor | Judul Keputusan | Status | Target / Catatan |
 |---|---|---|---|
-| ADR-001 | Pemilihan Stack: Next.js App Router + Supabase + Serwist | **Diusulkan** | Menunggu hasil uji scaffold 0.2 |
+| ADR-001 | Pemilihan Stack: Next.js App Router + Supabase + Serwist | **Diusulkan** | Fondasi Next/TS/Tailwind lolos uji 0.2; Serwist dan Supabase belum diverifikasi. Penerimaan keputusan ada di Product Owner. |
 | ADR-002 | Absensi Offline: Client Component + IndexedDB, Sinkronisasi via Supabase Browser Client | **Diusulkan** | Target finalisasi Sprint 2 |
 
 ---
@@ -68,10 +73,10 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
   - [x] Reviewer default (`.github/CODEOWNERS`)
   - [x] Pelacak progres (`docs/PROGRESS.md`)
   - [ ] *[Manual User]* Buat repo GitHub & pasang proteksi branch `main` (wajib review & CI hijau)
-- [ ] **0.2 Scaffolding Codebase Next.js**
-  - [ ] Scaffold Next.js App Router (TS strict, Tailwind CSS, shadcn/ui)
-  - [ ] Menetapkan versi Node via `.nvmrc` atau `engines` (disamakan dengan CI)
-  - [ ] ESLint, Prettier, skrip `lint`, `typecheck`, `test`
+- [x] **0.2 Scaffolding Codebase Next.js**
+  - [x] Scaffold Next.js App Router (TS strict, Tailwind CSS, shadcn/ui)
+  - [x] Menetapkan versi Node via `.nvmrc` atau `engines` (disamakan dengan CI)
+  - [x] ESLint, Prettier, skrip `lint`, `typecheck`, `test`
 - [ ] **0.3 Provisioning Lingkungan Supabase**
   - [ ] Konfigurasi `supabase init` lokal
   - [ ] *[Manual User]* Buat project cloud Staging & Produksi (Singapore)

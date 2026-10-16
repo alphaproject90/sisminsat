@@ -2,6 +2,11 @@
 node_modules/
 .pnp
 .pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # Testing & Artifacts
 coverage/
@@ -15,6 +20,7 @@ build/
 dist/
 .vercel/
 *.tsbuildinfo
+next-env.d.ts
 
 # Service Worker Generated Files
 public/sw.js*
@@ -28,8 +34,10 @@ public/swe-worker*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 .DS_Store
 Thumbs.db
+*.pem
 
 # IDE & Editor
 .vscode/

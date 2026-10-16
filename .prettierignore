@@ -1,0 +1,5 @@
+docs/
+GEMINI.md
+.github/
+package-lock.json
+.next/
