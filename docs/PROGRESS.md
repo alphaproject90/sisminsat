@@ -10,7 +10,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 - **Status Saat Ini**: Fase 0 (Persiapan & Fondasi)
 - **Sprint Aktif**: Sprint 0 (Setup Repositori & Tooling Lokal)
 - **Target MVP**: 3–5 Gudep Pilot, input absensi < 60 detik (offline-first)
-- **Terakhir Diperbarui**: 16 Oktober 2026
+- **Terakhir Diperbarui**: 17 Oktober 2026
 
 ---
 
@@ -57,7 +57,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 - **Next 16 (Proxy & Cookies Async)**: Middleware konvensi diganti menjadi proxy (`proxy.ts`), dan `cookies()` bersifat async (`await cookies()`). Verifikasi dari dokumentasi lokal sebelum Sprint 1.
 - **Tailwind Turbopack vs Webpack (Serwist)**: `next.config.ts` memakai aturan loader `@tailwindcss/turbopack` yang hanya berlaku di Turbopack. Jika Serwist butuh build webpack di Sprint 2, integrasi Tailwind harus diganti ke jalur PostCSS resmi.
 - **Dependensi shadcn & Risiko Audit**: `shadcn` ada di `dependencies` dan dibutuhkan build lewat `@import 'shadcn/tailwind.css'` di `globals.css`. Audit menemukan temuan high di rantai `braces`. Keputusan: diterima sebagai risiko untuk sementara, ditinjau ulang di 0.5 dengan `npm audit --omit=dev` di CI. Dilarang memindahkan `shadcn` ke `devDependencies` tanpa build ulang.
-- **Nama Status Check CI**: Nama status check yang akan diwajibkan di ruleset: 'Lint, typecheck, test, build'.
+- **Status Check CI Diwajibkan**: Status check 'Lint, typecheck, test, build' kini telah diwajibkan di ruleset protect-main. Run pertama berhasil dalam 40 detik (tanpa cache npm, normal).
 - **Dependabot GitHub Actions**: Dependabot untuk github-actions dibahas di 0.5b.
 
 ---
@@ -93,7 +93,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
   - [ ] *[Manual User]* Sambungkan repo ke Vercel (Region `sin1`)
   - [ ] Konfigurasi env vars staging untuk Preview per PR
 - [ ] **0.5 Konfigurasi CI/CD Pipeline (GitHub Actions)**
-  - [ ] Workflow CI aplikasi (`ci.yml`) (menunggu hasil run di tab Actions)
+  - [x] Workflow CI aplikasi (`ci.yml`) (run pertama hijau dalam 40 detik, `actions/checkout@v7` dan `actions/setup-node@v7` terbukti berjalan, status check "Lint, typecheck, test, build" kini diwajibkan di ruleset protect-main)
   - [ ] Workflow CI: lint, typecheck, Vitest, pgTAP
   - [ ] Auto-migrate ke staging, manual approval untuk produksi
 - [ ] **0.6 Observabilitas & Health Check**
