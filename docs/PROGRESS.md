@@ -33,9 +33,10 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 | **OPEN-01** | Kebijakan RLS Anggota vs Hak Akses Kwartir | Matriks RLS saat ini membuat pengurus kwartir bisa membaca baris anggota di gudep turunan, padahal dokumen (E7) menyebut kwartir hanya melihat data agregat. | Telah diputuskan: data anggota hanya bisa dibaca oleh anggota organisasi itu sendiri; kwartir hanya melihat data melalui fungsi agregat (lihat Keputusan Final #3 & #7). | **Selesai** |
 | **OPEN-02** | Handle Akun GitHub di CODEOWNERS | Menentukan username/organisasi GitHub resmi untuk peninjau kode default. | Telah disepakati menggunakan `@alphaproject90`. | **Selesai** |
 | **OPEN-03** | Pilihan Library Komponen shadcn: Base UI vs Radix UI | Preset `base-nova` dari shadcn menginstal `@base-ui/react` sebagai library komponen primitif. Semua tes, typecheck, dan build lolos. | Diputuskan mempertahankan Base UI (catatan: ditinjau ulang bila ada kendala sebelum Sprint 1). | **Selesai** |
-| **OPEN-04** | Konfigurasi DB Major Version & Auth Supabase | Nilai `major_version` di bagian `[db]` pada `supabase/config.toml` (saat ini 17) harus disamakan dengan project cloud setelah project staging dibuat. Pengaturan auth (`site_url`, konfirmasi email) diputuskan di Sprint 1. | Sinkronisasi versi DB lokal dan cloud sebelum pengujian migrasi; keputusan auth di Sprint 1. | **Terbuka** |
+| **OPEN-04** | Konfigurasi DB Major Version & Auth Supabase | Nilai 17.11 milik project lama tidak berlaku. Versi PostgreSQL project staging baru (sisminsat-staging) harus diverifikasi lalu dicocokkan dengan `major_version` di `supabase/config.toml`. Pengaturan auth (`site_url`, konfirmasi email) diputuskan di Sprint 1. | Verifikasi versi PostgreSQL project baru sebelum pengujian migrasi; keputusan pengaturan auth di Sprint 1. | **Terbuka** |
 | **OPEN-05** | Batasan Paket GitHub Gratis pada Repo Privat | Ruleset branch protection berfungsi di repo privat paket gratis (bukti: GH013). Yang belum terbukti: apakah Environments mendukung Required reviewers di paket ini. Itu diuji di 0.5b. Tetap Terbuka, dengan ruang lingkup hanya soal Environments dan penanganan secret. Opsi B (tanpa secret produksi di GitHub, migrasi produksi dijalankan manual dari komputer Product Owner, staging boleh memakai secret repo dengan data fiktif) tetap menjadi rencana cadangan. | Menentukan strategi manajemen secret CI/CD dan alur rilis produksi di tugas 0.5b. | **Terbuka** |
-| **OPEN-06** | Hardening Supabase untuk Sprint 1 | Hardening Supabase untuk Sprint 1, diturunkan dari supabase/config.toml: minimum_password_length dan password_requirements (Dokumen Kerja US-1.1: minimal 10 karakter), enable_confirmations email, ketersediaan MFA TOTP di paket Supabase (komentar config menyebut Pro), SMTP produksi (Resend) karena email bawaan terbatas, auto_expose_new_tables = false dengan GRANT eksplisit, dan status eksperimental pgdelta untuk db diff. | Wajib diharmonisasikan ke supabase/config.toml dan migrasi sebelum Sprint 1 dimulai. | **Terbuka** |
+| **OPEN-06** | Hardening Supabase untuk Sprint 1 | Hardening Supabase untuk Sprint 1, diturunkan dari supabase/config.toml: minimum_password_length dan password_requirements (Dokumen Kerja US-1.1: minimal 10 karakter), enable_confirmations email, ketersediaan MFA TOTP di paket Supabase (komentar config menyebut Pro), SMTP produksi (Resend) karena email bawaan terbatas, auto_expose_new_tables = false dengan GRANT eksplisit, dan status eksperimental pgdelta untuk db diff. Setelan saat pembuatan project staging: "Enable Data API" dicentang, "Automatically expose new tables" dicentang (Supabase menyarankan menonaktifkan ini untuk kontrol manual), "Enable automatic RLS" tidak dicentang. | Wajib diharmonisasikan ke supabase/config.toml dan migrasi sebelum Sprint 1 dimulai. Tindakan: Product Owner mencari setelan untuk menonaktifkan auto-expose di dashboard. Jika tidak bisa diubah, setiap migrasi wajib memuat GRANT/REVOKE eksplisit dan tes pgTAP membuktikan akses anon ditolak. | **Terbuka** |
+| **OPEN-07** | Region Cloud Supabase & Kepatuhan Lokasi Data | Region staging di Tokyo (ap-northeast-1, dipilih otomatis oleh Supabase). Tidak ada region Supabase di Indonesia, jadi data produksi akan berada di luar negeri. | Keputusan region produksi dan teks kebijakan privasi/UU PDP (lokasi data, transfer lintas negara) dibahas dengan konsultan hukum di Fase 4. Dampak staging: tidak ada, datanya fiktif. | **Terbuka** |
 
 ---
 
@@ -43,7 +44,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 
 | Tanggal | Isu Blocker | Dampak | Tindak Lanjut / PIC |
 |---|---|---|---|
-| 14-10-2026 | Docker Desktop belum terpasang di Windows | `supabase start` lokal belum bisa dijalankan untuk pengujian DB | Akan diinstal manual oleh User di luar CLI |
+| 14-10-2026 | Docker belum terpasang di Windows (`docker --version`: command not found). Spesifikasi komputer: Windows 10 Pro 22H2 (build 19045.6466), Intel Core i3-3240 (2 inti, 4 thread), RAM 8 GB (7,89 GB usable, ~76% terpakai saat idle), disk HDD, virtualisasi di Task Manager tertulis Disabled. | `supabase start` lokal tidak dapat dijalankan untuk pengujian DB | Docker lokal tidak direncanakan karena spesifikasi tidak memadai (RAM 8 GB sudah sekitar 76% terpakai, HDD, 2 inti, virtualisasi nonaktif). Dukungan Docker Desktop untuk Windows 10 belum diverifikasi. Diusulkan dialihkan ke verifikasi CI (ADR-003, menunggu keputusan Product Owner). |
 
 ---
 
@@ -68,6 +69,7 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
 |---|---|---|---|
 | ADR-001 | Pemilihan Stack: Next.js App Router + Supabase + Serwist | **Diusulkan** | Fondasi Next/TS/Tailwind lolos uji 0.2; Serwist dan Supabase belum diverifikasi. Penerimaan keputusan ada di Product Owner. |
 | ADR-002 | Absensi Offline: Client Component + IndexedDB, Sinkronisasi via Supabase Browser Client | **Diusulkan** | Target finalisasi Sprint 2 |
+| ADR-003 | Verifikasi DB & Migrasi di CI GitHub Actions (Bukan Docker Lokal) | **Diusulkan** | Tes database (pgTAP) dan migrasi diverifikasi di CI GitHub Actions, bukan di Docker lokal. Konsekuensi: umpan balik lebih lambat; jalur lokal bisa ditambahkan jika perangkat ditingkatkan. Penerimaan keputusan ada di Product Owner. |
 
 ---
 
@@ -87,7 +89,8 @@ Dokumen pelacak status implementasi, roadmap per fase, keputusan final, keputusa
   - [x] ESLint, Prettier, skrip `lint`, `typecheck`, `test`
 - [ ] **0.3 Provisioning Lingkungan Supabase**
   - [x] Konfigurasi `supabase init` lokal
-  - [ ] *[Manual User]* Buat project cloud Staging & Produksi (Singapore - ap-southeast-1)
+  - [x] *[Manual User]* Buat project cloud Staging (project sisminsat-staging dibuat di region Northeast Asia (Tokyo, ap-northeast-1), dipilih otomatis oleh Supabase; berbeda dari rencana awal Singapore yang tidak muncul sebagai pilihan menurut Product Owner, lihat OPEN-07. Versi PostgreSQL belum diverifikasi.)
+  - [ ] *[Manual User]* Buat project cloud Produksi (region ditentukan saat project dibuat; periksa apakah region spesifik bisa dipilih)
   - [ ] *[Manual User]* Konfigurasi GitHub Environment Secrets
 - [ ] **0.4 Integrasi Vercel**
   - [ ] *[Manual User]* Sambungkan repo ke Vercel (Region `sin1`)
